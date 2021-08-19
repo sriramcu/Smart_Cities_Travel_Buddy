@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectorActivity"
+    android:scrollbars="vertical"
+    >
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=""
+            android:id="@+id/welcomeMsg"
+            android:fontFamily="sans-serif-black"
+            android:textSize="30dp"/>
+
+        <Button
+            android:text="LOGOUT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcomeMsg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:backgroundTint="@color/red"
+            android:id="@+id/logoutButton" />
+
+        <ImageButton
+            android:onClick="imageButtonClicked"
+            android:id="@+id/buttonBangalore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            android:src="@drawable/bangalore">
+
+        </ImageButton>
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/mumbai"
+            android:onClick="imageButtonClicked"
+            android:id="@+id/buttonMumbai">
+
+        </ImageButton>
+
+        <ImageButton
+            android:onClick="imageButtonClicked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/kolkata"
+            android:id="@+id/buttonKolkata">
+
+        </ImageButton>
+
+        <ImageButton
+            android:onClick="imageButtonClicked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/delhi"
+            android:id="@+id/buttonDelhi">
+
+        </ImageButton>
+
+        <ImageButton
+            android:onClick="imageButtonClicked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/chennai"
+            android:id="@+id/buttonChennai">
+
+        </ImageButton>
+
+        <ImageButton
+            android:onClick="imageButtonClicked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/hyderabad"
+            android:id="@+id/buttonHyderabad">
+
+        </ImageButton>
+
+    </LinearLayout>
+
+</ScrollView>

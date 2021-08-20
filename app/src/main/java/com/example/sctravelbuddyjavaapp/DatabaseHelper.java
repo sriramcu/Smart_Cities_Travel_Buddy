@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+
+/**
+ * Class to represent the SQLite database used to store attraction-related information
+ */
 public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	
@@ -19,16 +23,19 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	public static final String CREATE_DB_QUERY = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "(" + City + " VARCHAR," + Place + " VARCHAR,"  + Address + " VARCHAR,"  + Description + " VARCHAR,"  + Type + " VARCHAR"  + ")";
 	
-	
+
+	// Constructor
     public DatabaseHelper(Context context) {
 		super(context,DATABASE_NAME,null,DATABASE_VERSION);
 	}
-	
+
+	// Used to create database when this class is accessed
 	@Override
     public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_DB_QUERY);
 	}
-	
+
+	// Helper method to upgrade the SQLite database version
 	@Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);

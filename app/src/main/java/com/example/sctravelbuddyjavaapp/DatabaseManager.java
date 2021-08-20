@@ -7,30 +7,34 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.sql.SQLDataException;
 
+/**
+ * Class to interact with and handle common database operations for the Attraction-related SQLite database
+ */
 public class DatabaseManager{
 	private DatabaseHelper dbHelper;
 	private Context context;
 	private SQLiteDatabase database;
-	
+
+	// Constructor
 	public DatabaseManager(Context ctx){
 		context = ctx;
 	}
 
 
-
+	// Used to open connection to the database and to instantiate the necessary database objects needed for database operations
 	public DatabaseManager open() throws SQLDataException{
 		dbHelper = new DatabaseHelper(context);
 		database = dbHelper.getWritableDatabase();
 		return this;
 	}
-	
+
+	// Used to close the connection to the database
 	public void close(){
 		dbHelper.close();
 	}
 
-
+	// Used to insert some sample values into the database when the app is run for the first time
 	public void pre_insert(){
-		// TODO find a way to do this only once
 		System.out.println("Inserting initial rows");
 		database.beginTransaction();
 		ContentValues contentValues1 = new ContentValues();
@@ -137,6 +141,7 @@ public class DatabaseManager{
 
 	}
 
+	// Used to insert any given values into the database, used by AddAttraction class
 	public void insert(String city,String place,String address,String description, String type){
 		database.beginTransaction();
 		ContentValues contentValues = new ContentValues();
@@ -150,10 +155,14 @@ public class DatabaseManager{
 		database.endTransaction();
 		System.out.println("Insertion Successful");
 
-//		Cursor cursor = database.rawQuery(String.format("INSERT into %s values ('%s','%s','%s','%s','%s','%s');", DatabaseHelper.DATABASE_NAME, DatabaseHelper.City, DatabaseHelper.Place, DatabaseHelper.Address, DatabaseHelper.Description, DatabaseHelper.Type), null);
-
 	}
-	
+
+
+	/**
+	 * Used to fetch all unique attraction rows from the database for a given city
+	 * @param cityname is the city for which the attractions should be returned
+	 * @return cursor object to read the fetched data in the main program
+	 */
 	public Cursor fetch(String cityname){
 		String [] columns = new String[] {DatabaseHelper.City,DatabaseHelper.Place,DatabaseHelper.Address,DatabaseHelper.Description};
 		Cursor cursor = database.rawQuery(String.format("select DISTINCT * from %s where %s='%s';",DatabaseHelper.DATABASE_TABLE, DatabaseHelper.City, cityname),null);
@@ -163,17 +172,5 @@ public class DatabaseManager{
 		return cursor;
 	}
 
-//    public int update(String city,String place,String addresses,String Descriptions){
-//		ContentValues contentValues = new ContentValues();
-//		contentValues.put(DatabaseHelper.City,city_selected);
-//		contentValues.put(DatabaseHelper.Place,place_names);
-//		contentValues.put(DatabaseHelper.Address,addresses);
-//		contentValues.put(DatabaseHelper.Descriptions,descriptions);
-//		int ret = database.update(DatabaseHelper.DATABASE_TABLE,contentValues,DatabaseHelper.City + "=" + city_selected,null);
-//		return ret;
-//	}
-//
-//	public void delete(String city){
-//		database.delete(DatabaseHelper.DATABASE_TABLE,contentValues,DatabaseHelper.City + "=" + city_selected,null);
-//	}
+
 }

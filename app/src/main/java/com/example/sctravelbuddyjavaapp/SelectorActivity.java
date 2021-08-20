@@ -8,7 +8,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Activity class to select a city to browse attractions in, by clicking on an image button corresponding to a city
+ */
 public class SelectorActivity extends Activity {
+
+    /**
+     * Method called when activity is launched
+     * @param savedInstanceState saved state information
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,12 +29,15 @@ public class SelectorActivity extends Activity {
         catch(Exception e){
             e.printStackTrace();
         }
+
+        // Inserts sample data into the database if the database is empty
         dbManager.pre_insert();
         dbManager.close();
 
 
         Button LogOUT = (Button)findViewById(R.id.logoutButton);
 
+        // On click listener for logout button
         LogOUT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,6 +50,7 @@ public class SelectorActivity extends Activity {
             }
         });
 
+        // Getting the name of the user who just logged in from the intent
         if(getIntent().hasExtra("MY_NAME")){
             String name1 = getIntent().getExtras().getString("MY_NAME");
             System.out.println(name1);
@@ -48,8 +60,9 @@ public class SelectorActivity extends Activity {
         }
     }
 
-
+    // Method called when an image button of a city is clicked, this is the common method for all City Image Buttons
     public void imageButtonClicked(View view){
+        // Gets the city name of the image button clicked
         String city_selected = getResources().getResourceEntryName(view.getId());
         city_selected = city_selected.substring(6);
         System.out.println(city_selected);

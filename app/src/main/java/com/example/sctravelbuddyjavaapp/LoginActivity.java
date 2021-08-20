@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * Activity class to allow users to login or click the sign up button
+ */
 public class LoginActivity extends AppCompatActivity {
 
     Button LogInButton, RegisterButton ;
@@ -19,11 +22,15 @@ public class LoginActivity extends AppCompatActivity {
     String EmailHolder, PasswordHolder;
     Boolean EditTextEmptyHolder;
     SQLiteDatabase sqLiteDatabaseObj;
-    SQLiteHelper sqLiteHelper;
+    LoginDatabaseHelper loginDatabaseHelper;
     Cursor cursor;
     String TempPassword = "NOT_FOUND" ;
     public static final String UserEmail = "";
 
+    /**
+     * Method called when activity is launched
+     * @param savedInstanceState saved state information
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         Email = (EditText)findViewById(R.id.editEmail);
         Password = (EditText)findViewById(R.id.editPassword);
 
-        sqLiteHelper = new SQLiteHelper(this);
+        loginDatabaseHelper = new LoginDatabaseHelper(this);
 
         //Adding click listener to log in button.
         LogInButton.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Calling login method.
                 LoginFunction();
 
+                // Clears the text fields when the user tries to sign in
                 Email.getText().clear();
                 Password.getText().clear();
 
@@ -69,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
     // Login function starts from here.
     @SuppressLint("Range")
     public void LoginFunction(){
@@ -76,10 +85,10 @@ public class LoginActivity extends AppCompatActivity {
         if(EditTextEmptyHolder) {
 
             // Opening SQLite database write permission.
-            sqLiteDatabaseObj = sqLiteHelper.getWritableDatabase();
+            sqLiteDatabaseObj = loginDatabaseHelper.getWritableDatabase();
 
             // Adding search email query to cursor.
-            cursor = sqLiteDatabaseObj.query(SQLiteHelper.TABLE_NAME, null, " " + SQLiteHelper.Table_Column_2_Email + "=?", new String[]{EmailHolder}, null, null, null);
+            cursor = sqLiteDatabaseObj.query(LoginDatabaseHelper.TABLE_NAME, null, " " + LoginDatabaseHelper.Table_Column_2_Email + "=?", new String[]{EmailHolder}, null, null, null);
 
             while (cursor.moveToNext()) {
 
@@ -88,14 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                     cursor.moveToFirst();
 
                     // Storing Password associated with entered email.
-                    TempPassword = cursor.getString(cursor.getColumnIndex(SQLiteHelper.Table_Column_3_Password));
+                    TempPassword = cursor.getString(cursor.getColumnIndex(LoginDatabaseHelper.Table_Column_3_Password));
 
                     // Closing cursor.
                     cursor.close();
                 }
             }
 
-            // Calling method to check final result ..
+            // Calling method to check whether the password entered is correct
             CheckFinalResult();
 
         }
@@ -108,14 +117,15 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
     // Checking EditText is empty or not.
     public void CheckEditTextStatus(){
 
-        // Getting value from All EditText and storing into String Variables.
+        // Getting value from All EditText fields and storing into String Variables.
         EmailHolder = Email.getText().toString();
         PasswordHolder = Password.getText().toString();
 
-        // Checking EditText is empty or no using TextUtils.
+        // Checking whether EditText is empty or not using TextUtils.
         if( TextUtils.isEmpty(EmailHolder) || TextUtils.isEmpty(PasswordHolder)){
 
             EditTextEmptyHolder = false ;
@@ -126,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
             EditTextEmptyHolder = true ;
         }
     }
+
 
     // Checking entered password from SQLite database email associated password.
     public void CheckFinalResult(){
@@ -138,16 +149,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-            SQLiteDatabase db = sqLiteHelper.getReadableDatabase();
+            SQLiteDatabase db = loginDatabaseHelper.getReadableDatabase();
             String name_param = "";
-            Cursor c = db.rawQuery(String.format("SELECT %s FROM %s where %s='%s';",SQLiteHelper.Table_Column_1_Name, SQLiteHelper.TABLE_NAME, SQLiteHelper.Table_Column_2_Email, EmailHolder), null);
+            Cursor c = db.rawQuery(String.format("SELECT %s FROM %s where %s='%s';", LoginDatabaseHelper.Table_Column_1_Name, LoginDatabaseHelper.TABLE_NAME, LoginDatabaseHelper.Table_Column_2_Email, EmailHolder), null);
             if (c.moveToFirst()){
                 name_param = c.getString(0);
             }
             c.close();
             db.close();
 
-
+            // if the user is an admin (else condition), he gets to add a new attraction to the database
             if(!name_param.toLowerCase().contains("admin")) {
                 Intent intent = new Intent(LoginActivity.this, SelectorActivity.class);
                 // Sending Name to Selector Activity using intent.
@@ -157,6 +168,7 @@ public class LoginActivity extends AppCompatActivity {
 
             else
             {
+                // Admin navigates to the AddAttraction activity class
                 Intent intent = new Intent(LoginActivity.this, AddAttraction.class);
                 startActivity(intent);
             }

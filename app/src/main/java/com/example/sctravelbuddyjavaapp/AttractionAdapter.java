@@ -13,24 +13,41 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
+/**
+ * Class to represent and interact with card items stored in the Recycler View of the MapsActivity class
+ */
 public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.MyViewHolder> {
     private ArrayList<Attraction> attractions;
     private OnItemClickListener listener;
+
 
     public interface OnItemClickListener{
         void onItemClick(int position) throws IOException;
     }
 
+    /**
+     * Used to set the listener attribute for the Class (for the card item)
+     * @param l is the listener set in the MapsActivity class
+     */
     public void setOnItemClickListener(OnItemClickListener l){
         listener = l;
     }
 
+    /**
+     * Nested class specifically for the data displayed in the ViewHolder
+     */
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView name;
         public TextView address;
         public TextView description;
         public TextView type;
 
+        /**
+         *
+         * @param itemView is the View corresponding to the card item
+         * @param cListener is the click listener for the card item
+         */
         public MyViewHolder(View itemView, OnItemClickListener cListener) {
             super(itemView);
             name=itemView.findViewById(R.id.name);
@@ -64,6 +81,12 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.My
     }
 
 
+    /**
+     * Used to instantiate a new ViewHolder object corresponding to a certain type and parent
+     * @param parent is the parent view group (RecyclerView in this case)
+     * @param viewType is the type of view being instantiated
+     * @return ViewHolder object
+     */
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
@@ -71,6 +94,11 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.My
         return vh;
     }
 
+    /**
+     * Used to bind arraylist values to the XML UI elements and display them in the app
+     * @param holder ViewHolder object
+     * @param position is the index for the attractions ArrayList corresponding to one card
+     */
     @Override
     public void onBindViewHolder(@NonNull AttractionAdapter.MyViewHolder holder, int position) {
         Attraction current = attractions.get(position);
@@ -97,6 +125,10 @@ public class AttractionAdapter extends RecyclerView.Adapter<AttractionAdapter.My
         holder.type.setText(type_str);
     }
 
+    /**
+     * Used to find the number of cards (attractions) to be displayed
+     * @return size of attractions arraylist
+     */
     @Override
     public int getItemCount(){
         return attractions.size();

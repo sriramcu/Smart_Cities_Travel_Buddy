@@ -15,6 +15,10 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * Activity class for user registration
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     EditText Email, Password, Name, ConfirmPassword ;
@@ -23,10 +27,14 @@ public class RegisterActivity extends AppCompatActivity {
     Boolean EditTextEmptyHolder;
     SQLiteDatabase sqLiteDatabaseObj;
     String SQLiteDataBaseQueryHolder ;
-    SQLiteHelper sqLiteHelper;
+    LoginDatabaseHelper loginDatabaseHelper;
     Cursor cursor;
     String F_Result = "Not_Found";
 
+    /**
+     * Method called when activity is launched
+     * @param savedInstanceState saved state information
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         ConfirmPassword = (EditText)findViewById(R.id.confirmPassword);
         Name = (EditText)findViewById(R.id.editName);
 
-        sqLiteHelper = new SQLiteHelper(this);
+        loginDatabaseHelper = new LoginDatabaseHelper(this);
 
         // Adding click listener to register button.
         Register.setOnClickListener(new View.OnClickListener() {
@@ -76,18 +84,18 @@ public class RegisterActivity extends AppCompatActivity {
     // SQLite database build method.
     public void SQLiteDataBaseBuild(){
 
-        sqLiteDatabaseObj = openOrCreateDatabase(SQLiteHelper.DATABASE_NAME, Context.MODE_PRIVATE, null);
+        sqLiteDatabaseObj = openOrCreateDatabase(LoginDatabaseHelper.DATABASE_NAME, Context.MODE_PRIVATE, null);
 
     }
 
     // SQLite table build method.
     public void SQLiteTableBuild() {
 
-        sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + SQLiteHelper.TABLE_NAME + "(" + SQLiteHelper.Table_Column_ID + " PRIMARY KEY AUTOINCREMENT NOT NULL, " + SQLiteHelper.Table_Column_1_Name + " VARCHAR, " + SQLiteHelper.Table_Column_2_Email + " VARCHAR, " + SQLiteHelper.Table_Column_3_Password + " VARCHAR);");
+        sqLiteDatabaseObj.execSQL("CREATE TABLE IF NOT EXISTS " + LoginDatabaseHelper.TABLE_NAME + "(" + LoginDatabaseHelper.Table_Column_ID + " PRIMARY KEY AUTOINCREMENT NOT NULL, " + LoginDatabaseHelper.Table_Column_1_Name + " VARCHAR, " + LoginDatabaseHelper.Table_Column_2_Email + " VARCHAR, " + LoginDatabaseHelper.Table_Column_3_Password + " VARCHAR);");
 
     }
 
-    // Insert data into SQLite database method.
+    // Insert data into SQLite database
     public void InsertDataIntoSQLiteDatabase(){
 
         // If editText is not empty then this block will executed.
@@ -95,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
         {
 
             // SQLite query to insert data into table.
-            SQLiteDataBaseQueryHolder = "INSERT INTO "+SQLiteHelper.TABLE_NAME+" (name,email,password) VALUES('"+NameHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"');";
+            SQLiteDataBaseQueryHolder = "INSERT INTO "+ LoginDatabaseHelper.TABLE_NAME+" (name,email,password) VALUES('"+NameHolder+"', '"+EmailHolder+"', '"+PasswordHolder+"');";
 
             // Executing query.
             sqLiteDatabaseObj.execSQL(SQLiteDataBaseQueryHolder);
@@ -118,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    // Empty edittext after done inserting process method.
+    // Clear edittext fields after done inserting
     public void EmptyEditTextAfterDataInsert(){
 
         Name.getText().clear();
@@ -131,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    // Method to check EditText is empty or Not.
+    // Method to check whether EditText is empty or Not.
     public void CheckEditTextStatus(){
 
         // Getting value from All EditText and storing into String Variables.
@@ -150,9 +158,9 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    // Checks whether an email is of the correct format
     public void ValidateEmail(){
         String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
-//        Pattern pattern = Pattern.compile("^.+@.+\\..+$");
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(EmailHolder);
         if (!matcher.matches())
@@ -162,6 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    // Checks whether the passwords entered match and comply with the given conditions
     public void ValidatePassword(){
         PasswordHolder = Password.getText().toString();
         ConfirmPasswordHolder = ConfirmPassword.getText().toString();
@@ -182,14 +191,14 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     }
-    // Checking Email is already exists or not.
+    // Checking whether email already exists or not.
     public void CheckingEmailAlreadyExistsOrNot(){
 
         // Opening SQLite database write permission.
-        sqLiteDatabaseObj = sqLiteHelper.getWritableDatabase();
+        sqLiteDatabaseObj = loginDatabaseHelper.getWritableDatabase();
 
         // Adding search email query to cursor.
-        cursor = sqLiteDatabaseObj.query(SQLiteHelper.TABLE_NAME, null, " " + SQLiteHelper.Table_Column_2_Email + "=?", new String[]{EmailHolder}, null, null, null);
+        cursor = sqLiteDatabaseObj.query(LoginDatabaseHelper.TABLE_NAME, null, " " + LoginDatabaseHelper.Table_Column_2_Email + "=?", new String[]{EmailHolder}, null, null, null);
 
         while (cursor.moveToNext()) {
 
@@ -197,7 +206,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 cursor.moveToFirst();
 
-                // If Email is already exists then Result variable value set as Email Found.
+                // If Email already exists then Result variable value set as Email Found.
                 F_Result = "Email Found";
 
                 // Closing cursor.
@@ -214,11 +223,11 @@ public class RegisterActivity extends AppCompatActivity {
     // Checking result
     public void CheckFinalResult(){
 
-        // Checking whether email is already exists or not.
+        // Checking whether email already exists or not.
         if(F_Result.equalsIgnoreCase("Email Found"))
         {
 
-            // If email is exists then toast msg will display.
+            // If email exists then toast msg will display.
             Toast.makeText(RegisterActivity.this,"Email Already Exists",Toast.LENGTH_LONG).show();
 
         }
@@ -236,7 +245,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
 
-            // If email already dose n't exists then user registration details will entered to SQLite database.
+            // If there are no validation errors then user registration details will entered to SQLite database.
             InsertDataIntoSQLiteDatabase();
 
         }

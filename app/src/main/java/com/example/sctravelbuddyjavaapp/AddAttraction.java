@@ -1,5 +1,6 @@
 package com.example.sctravelbuddyjavaapp;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -10,6 +11,9 @@ import android.widget.Toast;
 
 import org.w3c.dom.Attr;
 
+/**
+ * Activity class for admins to add an attraction to the app
+ */
 public class AddAttraction extends AppCompatActivity {
 
     EditText City;
@@ -20,6 +24,10 @@ public class AddAttraction extends AppCompatActivity {
     Button AddAttraction;
     Button Logout;
 
+    /**
+     * Method called when activity is launched
+     * @param savedInstanceState saved state information
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +41,12 @@ public class AddAttraction extends AppCompatActivity {
         AddAttraction = (Button) findViewById(R.id.add_button);
         Logout = (Button) findViewById(R.id.logoutbuttonadmin);
 
+        /*
+         * On click listener for the add attraction button
+         * On clicking the button a new attraction is saved
+         * containing the following details - city name,
+         * place name, address, type and description of the attraction
+         */
         AddAttraction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +64,9 @@ public class AddAttraction extends AppCompatActivity {
             }
         });
 
+        /*
+         * On click listener for logout button- returns to login activity
+         */
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

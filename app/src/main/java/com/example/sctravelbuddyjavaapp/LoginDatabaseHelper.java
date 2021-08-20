@@ -4,7 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
-public class SQLiteHelper extends SQLiteOpenHelper {
+/**
+ * Class to represent the SQLite database used to store User login-related information
+ */
+public class LoginDatabaseHelper extends SQLiteOpenHelper {
 
     static String DATABASE_NAME="UserDataBase";
 
@@ -18,12 +21,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String Table_Column_3_Password="password";
 
-    public SQLiteHelper(Context context) {
+    // Constructor
+    public LoginDatabaseHelper(Context context) {
 
         super(context, DATABASE_NAME, null, 1);
 
     }
 
+    // Used to create database when this class is accessed
     @Override
     public void onCreate(SQLiteDatabase database) {
 
@@ -32,6 +37,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     }
 
+    // Helper method to upgrade the SQLite database version
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);

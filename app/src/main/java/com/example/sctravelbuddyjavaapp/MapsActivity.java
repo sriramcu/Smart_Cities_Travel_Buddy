@@ -34,6 +34,9 @@ import java.util.Scanner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Activity class for a city-specific attractions page with a map
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private RecyclerView recyclerView;
@@ -48,11 +51,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public TextView city;
     public TextView weatherinfo;
 
+    // Description of a city (eg- Garden City of India)
     String description = "";
 
     ArrayList<Attraction> attractions = new ArrayList<>();
 
     DatabaseManager dbManager;
+
+
+    /**
+     * Method called when activity is launched
+     * @param savedInstanceState saved state information
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -80,12 +90,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         weatherinfo = (TextView) findViewById(R.id.weatherinfo);
 
 
-
+        // gets city name from intent passed from SelectorActivity
         if(getIntent().hasExtra("CITY_NAME")){
             String city_selected = getIntent().getExtras().getString("CITY_NAME");
             this.cityname = city_selected;
             city.setText(city_selected);
 
+            // fetches db data using a thread
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -131,9 +142,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }).start();
 
 
+            // OpenWeatherMaps API's URL and API Key
             String API_KEY = "1aec76a6def1c20118399b55e15a7f56";
             String url = ("https://api.openweathermap.org/data/2.5/weather?q=" + city_selected + "&units=metric&appid=" + API_KEY);
 
+            // Gets weather data from openweather maps api and sets this data in this thread
             new Thread(new Runnable(){
                 @Override
                 public void run() {
@@ -143,7 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         InputStream is = conn.getInputStream();
                         Scanner s = new Scanner(is).useDelimiter("\\A");
                         String result = s.hasNext() ? s.next() : "";
-//                        System.out.println(result);
+
                         try {
                             JSONObject jsonObject = new JSONObject(result);
                             System.out.println(jsonObject);
@@ -153,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             String weather_str = jsonObject.getJSONArray("weather").getJSONObject(0).getString("main");
                             weatherinfo.setText(weather_str);
-                            // set appropriate xml element with this json object
+
                         }catch (JSONException err){
                             Log.d("Error", err.toString());
                         }
@@ -170,6 +183,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    // Method called when map loads
     @Override
     public void onMapReady(GoogleMap googleMap) {
         System.out.println("OnMapReady");
@@ -186,9 +200,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             LatLng temp;
             Attraction tempattr;
-            //Iterate through the list of attractions and put the below commands in the loop.
-            // These will be for each attraction element
 
+
+            // Iterate through the list of attractions and add markers on the map with different colors
+            // corresponding to attraction types defined in the Attraction class
             for(int i=0;i<attractions.size();i++) {
                 tempattr = attractions.get(i);
                 Address attraction = geocoder.getFromLocationName(tempattr.getAddress(), 1).get(0);
@@ -197,6 +212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
 
+            // Sets on click listener for attraction card items in the recycler view
             adapter.setOnItemClickListener(new AttractionAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {

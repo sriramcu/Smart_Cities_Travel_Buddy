@@ -1,5 +1,10 @@
-package com.example.sctravelbuddyjavaapp;
+/**
+ * Smart Cities Travel Buddy
+ * Created by Sriram, Simhendra and Anish, 2021
+ * Course- Mobile Application Development, 6th sem, RVCE
+ */
 
+package com.example.sctravelbuddyjavaapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 

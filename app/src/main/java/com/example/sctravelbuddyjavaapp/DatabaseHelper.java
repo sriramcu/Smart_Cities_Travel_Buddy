@@ -25,8 +25,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	static final String Address = "address";
 	static final String Description = "description";
 	static final String Type = "type";
+	static final String CityDescription = "city_description";
 	
-	public static final String CREATE_DB_QUERY = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "(" + City + " VARCHAR," + Place + " VARCHAR,"  + Address + " VARCHAR,"  + Description + " VARCHAR,"  + Type + " VARCHAR"  + ")";
+	public static final String CREATE_DB_QUERY = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "(" + City + " VARCHAR," + Place + " VARCHAR,"  + Address + " VARCHAR,"  + Description + " VARCHAR,"  + Type + " VARCHAR," + CityDescription + " VARCHAR"  + ")";
 	
 
 	// Constructor

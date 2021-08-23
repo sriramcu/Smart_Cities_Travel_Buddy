@@ -55,15 +55,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public TextView temp;
     public TextView city;
+    public TextView city_description;
     public TextView weatherinfo;
-
-    // Description of a city (eg- Garden City of India)
-    String description = "";
+    public TextView rangetemp;
 
     ArrayList<Attraction> attractions = new ArrayList<>();
 
     DatabaseManager dbManager;
 
+    /**
+     * Convert temperature obtained from the weather JSON to user readable text (33.05 -> 33 C)
+     * @param temp_str is the JSON-obtained temperature
+     * @return string to be displayed in the TextView object
+     */
+    protected String displayedTemp(String temp_str){
+        float temp_val = Float.parseFloat(temp_str);
+        int temp_int  = Math.round(temp_val);
+        temp_str = String.valueOf(temp_int);
+        temp_str = temp_str + " C";
+        return temp_str;
+    }
 
     /**
      * Method called when activity is launched
@@ -92,7 +103,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         recyclerView.setAdapter(adapter);
 
         temp = (TextView) findViewById(R.id.temp);
+        rangetemp = (TextView) findViewById(R.id.rangetemp);
         city = (TextView) findViewById(R.id.city);
+        city_description = (TextView) findViewById(R.id.city_description);
         weatherinfo = (TextView) findViewById(R.id.weatherinfo);
 
 
@@ -124,6 +137,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             String address = cursor.getString(2);
                             String description = cursor.getString(3);
                             String type = cursor.getString(4);
+                            String city_description_str = cursor.getString(5);
+                            if (ctr == 1)
+                                city_description.setText(city_description_str);
                             int type_num;
                             if (type.equalsIgnoreCase("tourist"))
                                 type_num = 1;
@@ -164,13 +180,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String result = s.hasNext() ? s.next() : "";
 
                         try {
+                            // Example of a returned weather JSON :-
+                            /*
+                            {"coord":{"lon":77.2167,"lat":28.6667},"weather":[{"id":721,"main":"Haze","description":"haze","icon":"50n"}],
+                            "base":"stations",
+                            "main":{"temp":33.05,"feels_like":40.05,"temp_min":33.05,"temp_max":35.73,"pressure":1004,"humidity":66},
+                            "visibility":3500,"wind":{"speed":2.57,"deg":350},"clouds":{"all":20},"dt":1629217680,
+                            "sys":{"type":1,"id":9165,"country":"IN","sunrise":1629159688,"sunset":1629206958},
+                            "timezone":19800,"id":1273294,"name":"Delhi","cod":200}
+                             */
                             JSONObject jsonObject = new JSONObject(result);
                             System.out.println(jsonObject);
-                            String temp_str = jsonObject.getJSONObject("main").getString("temp");
-                            temp_str = temp_str + " C";
-                            temp.setText(temp_str);
+                            String current_temp_str = jsonObject.getJSONObject("main").getString("temp");
+                            current_temp_str = displayedTemp(current_temp_str);
+                            temp.setText(current_temp_str);
 
-                            String weather_str = jsonObject.getJSONArray("weather").getJSONObject(0).getString("main");
+                            String min_temp_str = jsonObject.getJSONObject("main").getString("temp_min");
+                            min_temp_str = displayedTemp(min_temp_str);
+
+                            String max_temp_str = jsonObject.getJSONObject("main").getString("temp_max");
+                            max_temp_str = displayedTemp(max_temp_str);
+
+                            String range_temp_str = "Min = " + min_temp_str + ",   Max = " + max_temp_str;
+                            rangetemp.setText(range_temp_str);
+
+                            String weather_desc = jsonObject.getJSONArray("weather").getJSONObject(0).getString("main");
+                            String humidity_str = jsonObject.getJSONObject("main").getString("humidity");
+                            String weather_str = weather_desc + "\nHumidity=" + humidity_str + "%";
                             weatherinfo.setText(weather_str);
 
                         }catch (JSONException err){

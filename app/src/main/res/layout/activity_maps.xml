@@ -10,31 +10,46 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="20 C"
+        android:layout_height="50dp"
+        android:id="@+id/city"
+        android:textSize="40sp"
+        android:fontFamily="sans-serif-black"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/city_description"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
         android:id="@+id/temp"
         android:fontFamily="sans-serif-black"
-        android:textSize="64dp"/>
+        android:textSize="40sp"
+        />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:id="@+id/city"
-        android:text="Bangalore"
-        android:textSize="20dp"
-        android:fontFamily="sans-serif-black"/>
+        android:layout_height="45dp"
+        android:id="@+id/rangetemp"
+        android:fontFamily="sans-serif-black"
+        android:textSize="30sp"
+        />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:id="@+id/weatherinfo"
         android:text=""
         android:fontFamily="sans-serif-black"
-        android:textSize="17dp"/>
+        android:textSize="17sp"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="327dp"
+        android:layout_height="280dp"
         tools:context=".MapsActivity" />
 
     <androidx.recyclerview.widget.RecyclerView

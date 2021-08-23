@@ -41,6 +41,9 @@ public class DatabaseManager{
 
 	// Used to insert some sample values into the database when the app is run for the first time
 	public void pre_insert(){
+		Cursor c = fetch_all();
+		if(c.getCount()>=12)
+			return;
 		System.out.println("Inserting initial rows");
 		database.beginTransaction();
 		ContentValues contentValues1 = new ContentValues();
@@ -49,6 +52,7 @@ public class DatabaseManager{
 		contentValues1.put(DatabaseHelper.Address, "Ambedkar Bheedhi, Sampangi Rama Nagara, Bengaluru, Karnataka 560001");
 		contentValues1.put(DatabaseHelper.Description,"State Government Office");
 		contentValues1.put(DatabaseHelper.Type, "tourist");
+		contentValues1.put(DatabaseHelper.CityDescription, "Garden City of India");
 		database.insert(DatabaseHelper.DATABASE_TABLE,null,contentValues1);
 
 		ContentValues contentValues2 = new ContentValues();
@@ -65,6 +69,7 @@ public class DatabaseManager{
 		contentValues3.put(DatabaseHelper.Address,"Dharmapuri, Forest Colony, Tajganj, Agra, Uttar Pradesh 282001");
 		contentValues3.put(DatabaseHelper.Description,"Made by the Mughal Emperor Shah Jahan");
 		contentValues3.put(DatabaseHelper.Type,"tourist");
+		contentValues3.put(DatabaseHelper.CityDescription, "Capital of India");
 		database.insert(DatabaseHelper.DATABASE_TABLE,null,contentValues3);
 
 		ContentValues contentValues4 = new ContentValues();
@@ -89,6 +94,7 @@ public class DatabaseManager{
 		contentValues6.put(DatabaseHelper.Address,"Victoria Memorial Hall, 1, Queens Way, Maidan, Kolkata, West Bengal 700071");
 		contentValues6.put(DatabaseHelper.Description,"Dedicated to the memory of Empress Victoria");
 		contentValues6.put(DatabaseHelper.Type,"tourist");
+		contentValues6.put(DatabaseHelper.CityDescription, "Cultural Capital of India");
 		database.insert(DatabaseHelper.DATABASE_TABLE,null,contentValues6);
 
 		ContentValues contentValues7 = new ContentValues();
@@ -105,6 +111,7 @@ public class DatabaseManager{
 		contentValues8.put(DatabaseHelper.Address,"63, Anna Salai, Little Mount, Guindy, Chennai, Tamil Nadu 600032");
 		contentValues8.put(DatabaseHelper.Description,"ITC Grand Chola is one of the world's largest hotels accredited with LEED Platinum certification");
 		contentValues8.put(DatabaseHelper.Type,"hotel");
+		contentValues8.put(DatabaseHelper.CityDescription, "Gateway to South India");
 		database.insert(DatabaseHelper.DATABASE_TABLE,null,contentValues8);
 
 		ContentValues contentValues9 = new ContentValues();
@@ -121,6 +128,7 @@ public class DatabaseManager{
 		contentValues10.put(DatabaseHelper.Address,"Khair Complex, Ibrahim Bagh, Hyderabad, Telangana 500008");
 		contentValues10.put(DatabaseHelper.Description,"Golconda Fort, also known as Golla konda, is a fortified citadel built by the Kakatiyas");
 		contentValues10.put(DatabaseHelper.Type,"tourist");
+		contentValues10.put(DatabaseHelper.CityDescription, "City of Pearls");
 		database.insert(DatabaseHelper.DATABASE_TABLE,null,contentValues10);
 
 		ContentValues contentValues11 = new ContentValues();
@@ -137,6 +145,7 @@ public class DatabaseManager{
 		contentValues12.put(DatabaseHelper.Address,"Apollo Bandar, Colaba, Mumbai, Maharashtra 400001");
 		contentValues12.put(DatabaseHelper.Description,"Arch-monument built in the early 20th century");
 		contentValues12.put(DatabaseHelper.Type,"tourist");
+		contentValues12.put(DatabaseHelper.CityDescription, "Financial Capital of India");
 		database.insert(DatabaseHelper.DATABASE_TABLE,null,contentValues12);
 
 
@@ -170,7 +179,6 @@ public class DatabaseManager{
 	 * @return cursor object to read the fetched data in the main program
 	 */
 	public Cursor fetch(String cityname){
-		String [] columns = new String[] {DatabaseHelper.City,DatabaseHelper.Place,DatabaseHelper.Address,DatabaseHelper.Description};
 		Cursor cursor = database.rawQuery(String.format("select DISTINCT * from %s where %s='%s';",DatabaseHelper.DATABASE_TABLE, DatabaseHelper.City, cityname),null);
 		if(cursor!=null){
 			cursor.moveToFirst();
@@ -178,5 +186,16 @@ public class DatabaseManager{
 		return cursor;
 	}
 
+	/**
+	 * Used to fetch all unique attraction rows from the database for all cities
+	 * @return cursor object to read the fetched data
+	 */
+	public Cursor fetch_all(){
+		Cursor cursor = database.rawQuery(String.format("select DISTINCT * from %s;",DatabaseHelper.DATABASE_TABLE),null);
+		if(cursor!=null){
+			cursor.moveToFirst();
+		}
+		return cursor;
+	}
 
 }
